@@ -1,0 +1,88 @@
+# ============================================
+# .gitignore for ASP.NET Core Projects
+# ============================================
+
+# Build outputs
+bin/
+obj/
+out/
+publish/
+
+# IDE and Editor
+.vs/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.idea/
+
+# NuGet
+packages/
+*.nupkg
+project.lock.json
+
+# Database files (generated at runtime)
+*.db
+*.db-journal
+*.sqlite
+*.mdf
+*.ldf
+
+# User-specific and local settings
+appsettings.Development.json
+appsettings.Local.json
+secrets.json
+*.local.json
+
+# Logs
+*.log
+logs/
+Logs/
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temp files
+*.tmp
+*.temp
+tmp/
+temp/
+
+# Test results
+TestResults/
+*.trx
+coverage/
+*.coverage
+*.coveragexml
+
+# Misc
+*.cache
+*.bak
+*.swp
+*~
+
+# Rider
+.idea/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# Azure Functions
+local.settings.json
+
+# Secrets
+*.pfx
+*.pem
+*.key
+
+# Node (if using SPA)
+node_modules/
+npm-debug.log
+yarn-error.log

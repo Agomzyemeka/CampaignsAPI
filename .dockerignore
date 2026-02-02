@@ -1,0 +1,73 @@
+# ============================================
+# Docker Ignore File
+# ============================================
+# Excludes unnecessary files from Docker builds
+# Interview Note: Reduces build context size and improves build speed
+# ============================================
+
+# Git
+**/.git
+**/.gitignore
+**/.gitattributes
+
+# Build outputs
+**/bin
+**/obj
+**/out
+
+# IDE & Editor
+**/.vs
+**/.vscode
+**/.idea
+**/*.swp
+**/*.swo
+*~
+
+# User-specific files
+*.user
+*.userosscache
+*.suo
+
+# NuGet
+**/.nuget
+**/packages
+
+# Test results
+**/TestResults
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Docker files (not needed in container)
+**/Dockerfile*
+**/.dockerignore
+**/docker-compose*
+
+# Documentation (optional - include if needed in container)
+**/README.md
+**/CHANGELOG.md
+**/LICENSE
+
+# Database files (we use volume mounts)
+**/*.db
+**/*.db-journal
+**/*.sqlite
+
+# Logs
+**/*.log
+**/logs
+
+# Temp files
+**/tmp
+**/temp
+**/*.tmp
+
+# Secrets (never include in images!)
+**/*.pfx
+**/*.pem
+**/appsettings.Development.json
+**/secrets.json
+
+# Migration files (include these if needed for production)
+# Migrations/

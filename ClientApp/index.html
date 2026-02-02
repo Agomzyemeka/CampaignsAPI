@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campaigns Manager</title>
+    <style>
+        /* 
+        ============================================
+        CSS Styles for Campaigns Manager
+        Interview Notes:
+        - Mobile-first responsive design
+        - Modern CSS with variables
+        - Flexbox/Grid layouts
+        - Clean, professional UI
+        ============================================
+        */
+        
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --secondary: #64748b;
+            --success: #22c55e;
+            --warning: #eab308;
+            --danger: #ef4444;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-info span {
+            color: var(--text-muted);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+        }
+
+        .btn-outline:hover {
+            background: var(--background);
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            transition: border-color 0.2s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        /* Cards */
+        .card {
+            background: var(--surface);
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .card-body {
+            padding: 1rem;
+        }
+
+        /* Login Page */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary) 0%, #7c3aed 100%);
+        }
+
+        .login-card {
+            background: var(--surface);
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            max-width: 400px;
+            margin: 1rem;
+        }
+
+        .login-card h1 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+
+        /* Dashboard */
+        .dashboard {
+            padding: 1.5rem 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        /* Table */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: var(--background);
+            font-weight: 600;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        tr:hover td {
+            background: var(--background);
+        }
+
+        /* Status Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .badge-active {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .badge-draft {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-completed {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge-paused {
+            background: #f3e8ff;
+            color: #7c3aed;
+        }
+
+        .badge-cancelled {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--surface);
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            margin: 1rem;
+        }
+
+        .modal-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-body {
+            padding: 1rem;
+        }
+
+        .modal-footer {
+            padding: 1rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .pagination button {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            border-radius: 0.375rem;
+            cursor: pointer;
+        }
+
+        .pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .pagination button.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Alert */
+        .alert {
+            padding: 1rem;
+            border-radius: 0.375rem;
+            margin-bottom: 1rem;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        .alert-success {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            th, td {
+                padding: 0.5rem;
+                font-size: 0.875rem;
+            }
+        }
+
+        /* Actions */
+        .actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .actions button {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+        }
+
+        /* Hidden */
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Page -->
+    <div id="loginPage" class="login-container">
+        <div class="login-card">
+            <h1>🎯 Campaigns Manager</h1>
+            <div id="loginError" class="alert alert-error hidden"></div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="loginEmail" class="form-control" placeholder="admin@campaigns.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" class="form-control" placeholder="Password" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+            </form>
+            <p style="text-align: center; margin-top: 1rem; color: var(--text-muted); font-size: 0.875rem;">
+                Demo: admin@campaigns.com / Admin@123
+            </p>
+        </div>
+    </div>
+
+    <!-- Dashboard Page -->
+    <div id="dashboardPage" class="hidden">
+        <header>
+            <div class="container">
+                <div class="logo">🎯 Campaigns Manager</div>
+                <div class="user-info">
+                    <span id="userDisplay">Welcome, User</span>
+                    <button class="btn btn-outline" onclick="logout()">Logout</button>
+                </div>
+            </div>
+        </header>
+
+        <main class="container dashboard">
+            <!-- Statistics -->
+            <div class="stats-grid" id="statsGrid">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalCampaigns">0</div>
+                    <div class="stat-label">Total Campaigns</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="activeCampaigns">0</div>
+                    <div class="stat-label">Active</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalBudget">$0</div>
+                    <div class="stat-label">Total Budget</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="avgBudget">$0</div>
+                    <div class="stat-label">Avg Budget</div>
+                </div>
+            </div>
+
+            <!-- Campaigns Table -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Campaigns</h2>
+                    <button class="btn btn-primary" onclick="openCreateModal()">+ New Campaign</button>
+                </div>
+                <div class="card-body">
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Budget</th>
+                                    <th>Status</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="campaignsTable">
+                                <tr>
+                                    <td colspan="6" class="loading">
+                                        <div class="spinner"></div>
+                                        <p>Loading campaigns...</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="pagination" id="pagination"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Create/Edit Modal -->
+    <div class="modal-overlay" id="campaignModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modalTitle">Create Campaign</h3>
+                <button class="btn btn-outline" onclick="closeModal()">✕</button>
+            </div>
+            <form id="campaignForm">
+                <div class="modal-body">
+                    <input type="hidden" id="campaignId">
+                    <div class="form-group">
+                        <label>Campaign Name</label>
+                        <input type="text" id="campaignName" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="campaignDescription" class="form-control" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Budget ($)</label>
+                        <input type="number" id="campaignBudget" class="form-control" min="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Start Date</label>
+                        <input type="date" id="campaignStartDate" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>End Date</label>
+                        <input type="date" id="campaignEndDate" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select id="campaignStatus" class="form-control">
+                            <option value="0">Draft</option>
+                            <option value="1">Active</option>
+                            <option value="2">Paused</option>
+                            <option value="3">Completed</option>
+                            <option value="4">Cancelled</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Campaign</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * ============================================
+         * Campaigns Manager - JavaScript
+         * ============================================
+         * Interview Notes:
+         * - Modern ES6+ JavaScript
+         * - Async/await for API calls
+         * - JWT token management
+         * - State management pattern
+         * - Error handling
+         * ============================================
+         */
+
+        // Configuration
+        const API_URL = 'https://localhost:7001/api'; // Update to your API URL
+
+        // State
+        let state = {
+            token: localStorage.getItem('token'),
+            user: JSON.parse(localStorage.getItem('user') || 'null'),
+            campaigns: [],
+            pagination: { pageNumber: 1, pageSize: 10, totalRecords: 0, totalPages: 0 }
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            if (state.token && state.user) {
+                showDashboard();
+            } else {
+                showLogin();
+            }
+
+            // Event listeners
+            document.getElementById('loginForm').addEventListener('submit', handleLogin);
+            document.getElementById('campaignForm').addEventListener('submit', handleSaveCampaign);
+        });
+
+        // ============================================
+        // Authentication
+        // ============================================
+        async function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                const response = await fetch(`${API_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    state.token = result.data.token;
+                    state.user = result.data;
+                    localStorage.setItem('token', state.token);
+                    localStorage.setItem('user', JSON.stringify(state.user));
+                    showDashboard();
+                } else {
+                    showError('loginError', result.message || 'Login failed');
+                }
+            } catch (error) {
+                showError('loginError', 'Unable to connect to server');
+                console.error('Login error:', error);
+            }
+        }
+
+        function logout() {
+            state.token = null;
+            state.user = null;
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            showLogin();
+        }
+
+        // ============================================
+        // Navigation
+        // ============================================
+        function showLogin() {
+            document.getElementById('loginPage').classList.remove('hidden');
+            document.getElementById('dashboardPage').classList.add('hidden');
+        }
+
+        function showDashboard() {
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('dashboardPage').classList.remove('hidden');
+            document.getElementById('userDisplay').textContent = `Welcome, ${state.user?.username || 'User'}`;
+            loadStats();
+            loadCampaigns();
+        }
+
+        // ============================================
+        // API Calls
+        // ============================================
+        function getHeaders() {
+            return {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${state.token}`
+            };
+        }
+
+        async function loadStats() {
+            try {
+                const response = await fetch(`${API_URL}/campaigns/stats`, {
+                    headers: getHeaders()
+                });
+
+                if (response.status === 401) {
+                    logout();
+                    return;
+                }
+
+                const result = await response.json();
+                if (result.success && result.data) {
+                    document.getElementById('totalCampaigns').textContent = result.data.totalCampaigns;
+                    document.getElementById('activeCampaigns').textContent = result.data.activeCampaigns;
+                    document.getElementById('totalBudget').textContent = `$${formatNumber(result.data.totalBudget)}`;
+                    document.getElementById('avgBudget').textContent = `$${formatNumber(result.data.averageBudget)}`;
+                }
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        async function loadCampaigns(page = 1) {
+            try {
+                const response = await fetch(
+                    `${API_URL}/campaigns?pageNumber=${page}&pageSize=${state.pagination.pageSize}`,
+                    { headers: getHeaders() }
+                );
+
+                if (response.status === 401) {
+                    logout();
+                    return;
+                }
+
+                const result = await response.json();
+                if (result.success) {
+                    state.campaigns = result.data.data;
+                    state.pagination = {
+                        pageNumber: result.data.pageNumber,
+                        pageSize: result.data.pageSize,
+                        totalRecords: result.data.totalRecords,
+                        totalPages: result.data.totalPages
+                    };
+                    renderCampaigns();
+                    renderPagination();
+                }
+            } catch (error) {
+                console.error('Error loading campaigns:', error);
+                document.getElementById('campaignsTable').innerHTML = 
+                    '<tr><td colspan="6" style="text-align:center;color:red;">Error loading campaigns</td></tr>';
+            }
+        }
+
+        async function deleteCampaign(id) {
+            if (!confirm('Are you sure you want to delete this campaign?')) return;
+
+            try {
+                const response = await fetch(`${API_URL}/campaigns/${id}`, {
+                    method: 'DELETE',
+                    headers: getHeaders()
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    loadStats();
+                    loadCampaigns(state.pagination.pageNumber);
+                } else {
+                    alert(result.message || 'Failed to delete campaign');
+                }
+            } catch (error) {
+                console.error('Error deleting campaign:', error);
+                alert('Error deleting campaign');
+            }
+        }
+
+        async function handleSaveCampaign(e) {
+            e.preventDefault();
+            
+            const id = document.getElementById('campaignId').value;
+            const campaign = {
+                name: document.getElementById('campaignName').value,
+                description: document.getElementById('campaignDescription').value,
+                budget: parseFloat(document.getElementById('campaignBudget').value),
+                startDate: document.getElementById('campaignStartDate').value,
+                endDate: document.getElementById('campaignEndDate').value,
+                status: parseInt(document.getElementById('campaignStatus').value)
+            };
+
+            try {
+                const url = id ? `${API_URL}/campaigns/${id}` : `${API_URL}/campaigns`;
+                const method = id ? 'PUT' : 'POST';
+
+                const response = await fetch(url, {
+                    method,
+                    headers: getHeaders(),
+                    body: JSON.stringify(campaign)
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    closeModal();
+                    loadStats();
+                    loadCampaigns(state.pagination.pageNumber);
+                } else {
+                    alert(result.errors?.join('\n') || result.message || 'Failed to save campaign');
+                }
+            } catch (error) {
+                console.error('Error saving campaign:', error);
+                alert('Error saving campaign');
+            }
+        }
+
+        // ============================================
+        // UI Functions
+        // ============================================
+        function renderCampaigns() {
+            const tbody = document.getElementById('campaignsTable');
+            
+            if (state.campaigns.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No campaigns found</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = state.campaigns.map(c => `
+                <tr>
+                    <td><strong>${escapeHtml(c.name)}</strong><br><small style="color:var(--text-muted)">${escapeHtml(c.description?.substring(0, 50) || '')}</small></td>
+                    <td>$${formatNumber(c.budget)}</td>
+                    <td><span class="badge badge-${c.status.toLowerCase()}">${c.status}</span></td>
+                    <td>${formatDate(c.startDate)}</td>
+                    <td>${formatDate(c.endDate)}</td>
+                    <td class="actions">
+                        <button class="btn btn-outline" onclick="editCampaign(${c.id})">Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCampaign(${c.id})">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderPagination() {
+            const pagination = document.getElementById('pagination');
+            const { pageNumber, totalPages } = state.pagination;
+
+            if (totalPages <= 1) {
+                pagination.innerHTML = '';
+                return;
+            }
+
+            let html = `
+                <button onclick="loadCampaigns(${pageNumber - 1})" ${pageNumber === 1 ? 'disabled' : ''}>Previous</button>
+                <span>Page ${pageNumber} of ${totalPages}</span>
+                <button onclick="loadCampaigns(${pageNumber + 1})" ${pageNumber === totalPages ? 'disabled' : ''}>Next</button>
+            `;
+            pagination.innerHTML = html;
+        }
+
+        function openCreateModal() {
+            document.getElementById('modalTitle').textContent = 'Create Campaign';
+            document.getElementById('campaignForm').reset();
+            document.getElementById('campaignId').value = '';
+            document.getElementById('campaignModal').classList.add('active');
+        }
+
+        async function editCampaign(id) {
+            const campaign = state.campaigns.find(c => c.id === id);
+            if (!campaign) return;
+
+            document.getElementById('modalTitle').textContent = 'Edit Campaign';
+            document.getElementById('campaignId').value = campaign.id;
+            document.getElementById('campaignName').value = campaign.name;
+            document.getElementById('campaignDescription').value = campaign.description || '';
+            document.getElementById('campaignBudget').value = campaign.budget;
+            document.getElementById('campaignStartDate').value = campaign.startDate.split('T')[0];
+            document.getElementById('campaignEndDate').value = campaign.endDate.split('T')[0];
+            document.getElementById('campaignStatus').value = getStatusValue(campaign.status);
+            document.getElementById('campaignModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('campaignModal').classList.remove('active');
+        }
+
+        function showError(elementId, message) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.classList.remove('hidden');
+            setTimeout(() => element.classList.add('hidden'), 5000);
+        }
+
+        // ============================================
+        // Utilities
+        // ============================================
+        function formatNumber(num) {
+            return num?.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) || '0';
+        }
+
+        function formatDate(dateStr) {
+            return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text || '';
+            return div.innerHTML;
+        }
+
+        function getStatusValue(status) {
+            const statusMap = { 'Draft': 0, 'Active': 1, 'Paused': 2, 'Completed': 3, 'Cancelled': 4 };
+            return statusMap[status] ?? 0;
+        }
+    </script>
+</body>
+</html>
