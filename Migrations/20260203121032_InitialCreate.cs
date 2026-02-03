@@ -60,12 +60,12 @@ namespace CampaignsAPI.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "CreatedAt", "Email", "FullName", "IsActive", "LastLoginAt", "PasswordHash", "Role", "Username" },
-                values: new object[] { 1, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "admin@campaigns.com", "System Administrator", true, null, "$2a$11$3LZtFmqJ8VKhCqXqYQJ3yO.rqtVEVT2hOxO3FxYZCPNvJhb8nHp7y", "Admin", "admin" });
+                values: new object[] { 1, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "admin@campaigns.com", "System Administrator", true, null, "$2a$11$DgO.8NDzrjJH/C6VzFbMWOolma.NTJhOlR8R.Q8150BxFOGhb4C0q", "Admin", "admin" });
 
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "CreatedAt", "Email", "FullName", "IsActive", "LastLoginAt", "PasswordHash", "Role", "Username" },
-                values: new object[] { 2, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "demo@campaigns.com", "Demo User", true, null, "$2a$11$3LZtFmqJ8VKhCqXqYQJ3yO.rqtVEVT2hOxO3FxYZCPNvJhb8nHp7y", "User", "demo" });
+                values: new object[] { 2, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "demo@campaigns.com", "Demo User", true, null, "$2a$11$DgO.8NDzrjJH/C6VzFbMWOolma.NTJhOlR8R.Q8150BxFOGhb4C0q", "User", "demo" });
 
             migrationBuilder.InsertData(
                 table: "Campaigns",

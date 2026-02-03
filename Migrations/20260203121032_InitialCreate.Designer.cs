@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CampaignsAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260202141155_InitialCreate")]
+    [Migration("20260203121032_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -217,7 +217,7 @@ namespace CampaignsAPI.Migrations
                             Email = "admin@campaigns.com",
                             FullName = "System Administrator",
                             IsActive = true,
-                            PasswordHash = "$2a$11$3LZtFmqJ8VKhCqXqYQJ3yO.rqtVEVT2hOxO3FxYZCPNvJhb8nHp7y",
+                            PasswordHash = "$2a$11$DgO.8NDzrjJH/C6VzFbMWOolma.NTJhOlR8R.Q8150BxFOGhb4C0q",
                             Role = "Admin",
                             Username = "admin"
                         },
@@ -228,7 +228,7 @@ namespace CampaignsAPI.Migrations
                             Email = "demo@campaigns.com",
                             FullName = "Demo User",
                             IsActive = true,
-                            PasswordHash = "$2a$11$3LZtFmqJ8VKhCqXqYQJ3yO.rqtVEVT2hOxO3FxYZCPNvJhb8nHp7y",
+                            PasswordHash = "$2a$11$DgO.8NDzrjJH/C6VzFbMWOolma.NTJhOlR8R.Q8150BxFOGhb4C0q",
                             Role = "User",
                             Username = "demo"
                         });

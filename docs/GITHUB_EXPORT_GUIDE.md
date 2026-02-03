@@ -112,7 +112,7 @@ git commit -m "Initial commit: Campaigns API with JWT auth, EF Core, and Docker 
 
 ```powershell
 # Add GitHub as remote origin (replace with YOUR repository URL)
-git remote add origin https://github.com/YOUR_USERNAME/CampaignsAPI.git
+git remote add origin git@github.com:YOUR_USERNAME/CampaignsAPI.git
 
 # Rename branch to main (GitHub default)
 git branch -M main
@@ -121,10 +121,24 @@ git branch -M main
 git push -u origin main
 ```
 
-### If using SSH instead of HTTPS:
+### Your Repository (Already Set Up):
 
 ```powershell
-git remote add origin git@github.com:YOUR_USERNAME/CampaignsAPI.git
+# Your repo is already configured at:
+git remote -v
+# origin  git@github.com:Agomzyemeka/CampaignsAPI.git (fetch)
+# origin  git@github.com:Agomzyemeka/CampaignsAPI.git (push)
+
+# To push new changes:
+git add .
+git commit -m "Your commit message"
+git push
+```
+
+### If using HTTPS instead of SSH:
+
+```powershell
+git remote set-url origin https://github.com/YOUR_USERNAME/CampaignsAPI.git
 git push -u origin main
 ```
 

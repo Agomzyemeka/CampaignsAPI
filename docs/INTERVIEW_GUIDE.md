@@ -309,43 +309,69 @@ public async Task<IActionResult> GetCampaigns(
 ```bash
 cd CampaignsAPI
 dotnet run
-# Open https://localhost:7001 for Swagger UI
+# Frontend: https://localhost:7203
+# Swagger: https://localhost:7203/swagger
 ```
 
-### 2. Show Swagger UI
+### 2. Show the Frontend
 
-"Here's the Swagger documentation auto-generated from our code. It shows all endpoints, their parameters, and you can even test them directly."
+"Let me show you the Campaign Manager frontend..."
+- Open https://localhost:7203
+- Login with: `admin@campaigns.com` / `Admin@123`
+- Show the dashboard with statistics
+- Demonstrate creating a campaign
 
-### 3. Login Flow
+### 3. Show Swagger UI
+
+"Here's the Swagger documentation auto-generated from our code..."
+- Open https://localhost:7203/swagger
+- Show all endpoints, parameters, and schemas
+- Demonstrate the JWT authentication flow
+
+### 4. Login Flow
 
 "Let me demonstrate the authentication flow..."
 - POST /api/auth/login with demo credentials
-- Copy the JWT token
-- Click "Authorize" button, paste token
+- Copy the JWT token from response
+- Click "Authorize" button, enter: `Bearer {token}`
 - Now all endpoints are authenticated
 
-### 4. CRUD Operations
+### 5. CRUD Operations
 
 "Now I'll demonstrate the CRUD operations..."
 - GET /api/campaigns - Show pagination
 - GET /api/campaigns?status=Active - Show filtering
-- POST /api/campaigns - Create new campaign
+- POST /api/campaigns - Create new campaign (Status: 0=Draft, 1=Active, etc.)
 - PUT /api/campaigns/{id} - Update campaign
 - DELETE /api/campaigns/{id} - Soft delete
 
-### 5. Show Database
+### 6. Show Database
 
 "Let's look at the database..."
 - Open CampaignsAPI.db with DB Browser for SQLite
 - Show tables, indexes, seed data
-- Show the soft-deleted record
+- Show the soft-deleted record (IsDeleted = 1)
 
-### 6. Show Docker
+### 7. Show Docker (Optional)
 
 ```bash
-docker-compose up -d
-# Access at http://localhost:5000
+docker-compose up --build -d
+# API: http://localhost:5000
+# Swagger: http://localhost:5000/swagger
+# RabbitMQ UI: http://localhost:15672 (guest/guest)
 ```
+
+---
+
+## Campaign Status Reference
+
+| Value | Name | Use When |
+|-------|------|----------|
+| 0 | Draft | Campaign is being planned |
+| 1 | Active | Campaign is live |
+| 2 | Paused | Temporarily stopped |
+| 3 | Completed | Campaign finished successfully |
+| 4 | Cancelled | Campaign was cancelled |
 
 ---
 

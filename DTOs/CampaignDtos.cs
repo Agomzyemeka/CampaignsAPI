@@ -1,3 +1,5 @@
+using CampaignsAPI.Models;
+
 namespace CampaignsAPI.DTOs
 {
     /// <summary>
@@ -12,7 +14,7 @@ namespace CampaignsAPI.DTOs
         public decimal Budget { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public int Status { get; set; } // CampaignStatus as int
+        public CampaignStatus Status { get; set; } // Using enum for type safety
     }
 
     /// <summary>
@@ -27,7 +29,7 @@ namespace CampaignsAPI.DTOs
         public decimal? Budget { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
-        public int? Status { get; set; }
+        public CampaignStatus? Status { get; set; }
     }
 
     /// <summary>

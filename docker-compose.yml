@@ -1,15 +1,9 @@
 # ============================================
-# Docker Compose Configuration
+# Docker Compose - Campaigns API Stack
 # ============================================
-# Orchestrates the API service with optional dependencies
-# Interview Notes:
-# - docker-compose simplifies multi-container deployment
-# - Volume mounts for data persistence
-# - Network isolation for security
-# - Environment variable configuration
+# Includes: API, Redis (Cache), RabbitMQ (Message Queue)
+# Run: docker-compose up --build -d
 # ============================================
-
-version: '3.8'
 
 services:
   # ============================================
@@ -26,40 +20,55 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings__DefaultConnection=Data Source=/app/data/CampaignsAPI.db
+      - ConnectionStrings__Redis=redis:6379
+      - RabbitMQ__HostName=rabbitmq
+      - RabbitMQ__Port=5672
+      - RabbitMQ__UserName=guest
+      - RabbitMQ__Password=guest
       - JwtSettings__SecretKey=YourProductionSecretKeyThatShouldBeAtLeast32CharactersLong!
       - JwtSettings__Issuer=CampaignsAPI
       - JwtSettings__Audience=CampaignsAPIClients
       - JwtSettings__ExpiryMinutes=60
     volumes:
-      # Persist SQLite database
       - campaigns-data:/app/data
     networks:
       - campaigns-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:80/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
+    depends_on:
+      - redis
+      - rabbitmq
 
   # ============================================
-  # Optional: Nginx Reverse Proxy
+  # Redis - Distributed Cache
   # ============================================
-  # Uncomment below to add a reverse proxy
-  # nginx:
-  #   image: nginx:alpine
-  #   container_name: campaigns-nginx
-  #   restart: unless-stopped
-  #   ports:
-  #     - "80:80"
-  #     - "443:443"
-  #   volumes:
-  #     - ./nginx.conf:/etc/nginx/nginx.conf:ro
-  #     - ./ssl:/etc/nginx/ssl:ro
-  #   depends_on:
-  #     - api
-  #   networks:
-  #     - campaigns-network
+  redis:
+    image: redis:7-alpine
+    container_name: campaigns-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - campaigns-network
+    command: redis-server --appendonly yes
+
+  # ============================================
+  # RabbitMQ - Message Broker
+  # ============================================
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: campaigns-rabbitmq
+    restart: unless-stopped
+    ports:
+      - "5672:5672"   # AMQP protocol
+      - "15672:15672" # Management UI (guest/guest)
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    networks:
+      - campaigns-network
 
 # ============================================
 # Networks
@@ -74,3 +83,7 @@ networks:
 volumes:
   campaigns-data:
     name: campaigns-api-data
+  redis-data:
+    name: campaigns-redis-data
+  rabbitmq-data:
+    name: campaigns-rabbitmq-data

@@ -248,7 +248,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Campaigns API V1");
-        c.RoutePrefix = string.Empty; // Swagger UI at root
+        c.RoutePrefix = "swagger"; // Swagger UI at /swagger
     });
 }
 
@@ -258,8 +258,21 @@ app.UseHttpsRedirection();
 // CORS (must be before Authentication & Authorization)
 app.UseCors("AllowAll");
 
-// Static files (if needed)
-app.UseStaticFiles();
+// Static files from ClientApp folder
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(
+        Path.Combine(builder.Environment.ContentRootPath, "ClientApp")),
+    RequestPath = ""
+});
+
+// Serve index.html as default
+app.UseDefaultFiles(new DefaultFilesOptions
+{
+    FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(
+        Path.Combine(builder.Environment.ContentRootPath, "ClientApp")),
+    DefaultFileNames = new List<string> { "index.html" }
+});
 
 // Routing
 app.UseRouting();

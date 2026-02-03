@@ -144,13 +144,15 @@ namespace CampaignsAPI.Data
         {
             // Seed Users
             // Password: Admin@123
+            // Note: Using a pre-computed BCrypt hash for "Admin@123"
+            // Generated with: BCrypt.Net.BCrypt.HashPassword("Admin@123", 11)
             var adminUser = new User
             {
                 Id = 1,
                 Username = "admin",
                 Email = "admin@campaigns.com",
                 FullName = "System Administrator",
-                PasswordHash = "$2a$11$3LZtFmqJ8VKhCqXqYQJ3yO.rqtVEVT2hOxO3FxYZCPNvJhb8nHp7y", // Hashed: Admin@123
+                PasswordHash = "$2a$11$DgO.8NDzrjJH/C6VzFbMWOolma.NTJhOlR8R.Q8150BxFOGhb4C0q", // Admin@123
                 Role = "Admin",
                 IsActive = true,
                 CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc)
@@ -162,7 +164,7 @@ namespace CampaignsAPI.Data
                 Username = "demo",
                 Email = "demo@campaigns.com",
                 FullName = "Demo User",
-                PasswordHash = "$2a$11$3LZtFmqJ8VKhCqXqYQJ3yO.rqtVEVT2hOxO3FxYZCPNvJhb8nHp7y", // Hashed: Admin@123
+                PasswordHash = "$2a$11$DgO.8NDzrjJH/C6VzFbMWOolma.NTJhOlR8R.Q8150BxFOGhb4C0q", // Admin@123
                 Role = "User",
                 IsActive = true,
                 CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc)

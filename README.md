@@ -128,20 +128,32 @@ A production-ready RESTful API for campaign management built with ASP.NET Core 6
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/CampaignsAPI.git
+git clone https://github.com/Agomzyemeka/CampaignsAPI.git
 cd CampaignsAPI
 
 # Restore dependencies
 dotnet restore
 
-# Run database migrations
-dotnet ef database update
-
-# Run the application
+# Run the application (database auto-migrates on startup)
 dotnet run
-
-# Open browser to: https://localhost:7001 (Swagger UI)
 ```
+
+### 🌐 Access the Application
+
+| URL | Description |
+|-----|-------------|
+| https://localhost:7203 | **Frontend** - Campaigns Manager UI |
+| https://localhost:7203/swagger | **Swagger** - API Documentation |
+| https://localhost:7203/health | **Health Check** - API Status |
+| http://localhost:5110 | Frontend (HTTP) |
+| http://localhost:5110/swagger | Swagger (HTTP) |
+
+### 🔑 Demo Credentials
+
+| Email | Password | Role |
+|-------|----------|------|
+| `admin@campaigns.com` | `Admin@123` | Admin |
+| `demo@campaigns.com` | `Admin@123` | User |
 
 ### Configuration
 
@@ -167,8 +179,11 @@ Update `appsettings.json` for your environment:
 
 ### Base URL
 ```
-https://localhost:7001/api
+https://localhost:7203/api
 ```
+
+### Interactive Documentation
+Swagger UI is available at: `https://localhost:7203/swagger`
 
 ### Authentication Endpoints
 
@@ -431,9 +446,23 @@ docker build -t campaigns-api .
 # Run container
 docker run -d -p 5000:80 --name campaigns-api campaigns-api
 
-# Or use docker-compose
-docker-compose up -d
+# Or use docker-compose (includes Redis & RabbitMQ)
+docker-compose up --build -d
 ```
+
+### Services Included
+
+| Service | Port | Description |
+|---------|------|-------------|
+| `campaigns-api` | 5000 | ASP.NET Core API |
+| `campaigns-redis` | 6379 | Redis Cache (optional) |
+| `campaigns-rabbitmq` | 5672, 15672 | Message Queue + Management UI |
+
+### After Docker Deployment
+
+- **API**: http://localhost:5000
+- **Swagger**: http://localhost:5000/swagger
+- **RabbitMQ UI**: http://localhost:15672 (guest/guest)
 
 ### Production Deployment
 
@@ -451,6 +480,43 @@ services:
       replicas: 3
       restart_policy:
         condition: on-failure
+```
+
+---
+
+## 🖥️ Frontend Application
+
+The project includes a **Single Page Application (SPA)** built with vanilla JavaScript.
+
+### Location
+`ClientApp/index.html` - served at the root URL
+
+### Features
+- ✅ **Login/Logout** - JWT authentication with localStorage
+- ✅ **Dashboard** - Statistics overview (total, active, budget)
+- ✅ **Campaign Management** - Create, Edit, Delete campaigns
+- ✅ **Pagination** - Navigate through campaign lists
+- ✅ **Responsive Design** - Mobile-friendly UI
+- ✅ **Auto-logout** - Redirects on token expiration
+
+### How It Works
+
+```javascript
+// State management
+let state = {
+    token: localStorage.getItem('token'),
+    user: JSON.parse(localStorage.getItem('user')),
+    campaigns: [],
+    pagination: { pageNumber: 1, pageSize: 10 }
+};
+
+// API calls with JWT
+function getHeaders() {
+    return {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${state.token}`
+    };
+}
 ```
 
 ---
@@ -598,10 +664,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 👤 Author
 
-**Your Name**
-- GitHub: [@yourusername](https://github.com/yourusername)
-- LinkedIn: [Your LinkedIn](https://linkedin.com/in/yourprofile)
-- Email: your.email@example.com
+**Agomoh Emeka**
+- GitHub: [@Agomzyemeka](https://github.com/Agomzyemeka)
 
 ---
 
@@ -610,6 +674,18 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - ASP.NET Core Team
 - Entity Framework Core Team
 - FluentValidation Team
+
+---
+
+## 📊 Campaign Status Values
+
+| Value | Name | Description |
+|-------|------|-------------|
+| 0 | Draft | Campaign is being prepared |
+| 1 | Active | Campaign is currently running |
+| 2 | Paused | Campaign is temporarily stopped |
+| 3 | Completed | Campaign has finished |
+| 4 | Cancelled | Campaign was cancelled |
 
 ---
 
