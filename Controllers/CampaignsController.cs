@@ -63,13 +63,17 @@ namespace CampaignsAPI.Controllers
         public async Task<IActionResult> GetCampaigns(
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 10,
-            [FromQuery] CampaignStatus? status = null,
+            [FromQuery] int? status = null,
             [FromQuery] string? searchTerm = null,
             [FromQuery] string sortBy = "CreatedAt",
             [FromQuery] string sortOrder = "desc")
         {
             try
             {
+                // Log the request for debugging
+                _logger.LogInformation("GetCampaigns called: pageNumber={PageNumber}, pageSize={PageSize}, status={Status}", 
+                    pageNumber, pageSize, status);
+                
                 // Validate pagination parameters
                 pageNumber = Math.Max(1, pageNumber);
                 pageSize = Math.Clamp(pageSize, 1, 100); // Max 100 items per page
@@ -82,9 +86,10 @@ namespace CampaignsAPI.Controllers
                     .Where(c => !c.IsDeleted); // Soft delete filter
 
                 // Apply status filter
-                if (status.HasValue)
+                if (status.HasValue && Enum.IsDefined(typeof(CampaignStatus), status.Value))
                 {
-                    query = query.Where(c => c.Status == status.Value);
+                    var statusEnum = (CampaignStatus)status.Value;
+                    query = query.Where(c => c.Status == statusEnum);
                 }
 
                 // Apply search filter
@@ -479,39 +484,30 @@ namespace CampaignsAPI.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> GetStatistics()
         {
-            // Interview Note: Demonstrates aggregate queries and LINQ
-            var stats = await _context.Campaigns
+            // Interview Note: SQLite doesn't support Sum/Average on decimal, so we fetch data and compute client-side
+            var campaigns = await _context.Campaigns
                 .AsNoTracking()
                 .Where(c => !c.IsDeleted)
-                .GroupBy(c => 1) // Group all campaigns
-                .Select(g => new
-                {
-                    TotalCampaigns = g.Count(),
-                    TotalBudget = g.Sum(c => c.Budget),
-                    AverageBudget = g.Average(c => c.Budget),
-                    ActiveCampaigns = g.Count(c => c.Status == CampaignStatus.Active),
-                    DraftCampaigns = g.Count(c => c.Status == CampaignStatus.Draft),
-                    CompletedCampaigns = g.Count(c => c.Status == CampaignStatus.Completed),
-                    PausedCampaigns = g.Count(c => c.Status == CampaignStatus.Paused),
-                    CancelledCampaigns = g.Count(c => c.Status == CampaignStatus.Cancelled)
-                })
-                .FirstOrDefaultAsync();
+                .Select(c => new { c.Budget, c.Status })
+                .ToListAsync();
+
+            var stats = new
+            {
+                TotalCampaigns = campaigns.Count,
+                TotalBudget = campaigns.Sum(c => c.Budget),
+                AverageBudget = campaigns.Count > 0 ? campaigns.Average(c => c.Budget) : 0m,
+                ActiveCampaigns = campaigns.Count(c => c.Status == CampaignStatus.Active),
+                DraftCampaigns = campaigns.Count(c => c.Status == CampaignStatus.Draft),
+                CompletedCampaigns = campaigns.Count(c => c.Status == CampaignStatus.Completed),
+                PausedCampaigns = campaigns.Count(c => c.Status == CampaignStatus.Paused),
+                CancelledCampaigns = campaigns.Count(c => c.Status == CampaignStatus.Cancelled)
+            };
 
             return Ok(new ApiResponse<object>
             {
                 Success = true,
                 Message = "Statistics retrieved successfully",
-                Data = stats ?? new
-                {
-                    TotalCampaigns = 0,
-                    TotalBudget = 0m,
-                    AverageBudget = 0m,
-                    ActiveCampaigns = 0,
-                    DraftCampaigns = 0,
-                    CompletedCampaigns = 0,
-                    PausedCampaigns = 0,
-                    CancelledCampaigns = 0
-                }
+                Data = stats
             });
         }
 
@@ -522,23 +518,26 @@ namespace CampaignsAPI.Controllers
         private IQueryable<Campaign> ApplySorting(IQueryable<Campaign> query, string sortBy, string sortOrder)
         {
             // Default to descending order
-            var isDescending = sortOrder.ToLower() == "desc";
+            // Interview Note: Using explicit sorting for each type to avoid SQLite boxing issues
+            var isDescending = sortOrder?.ToLower() == "desc";
+            var sortField = sortBy?.ToLower() ?? "createdat";
 
-            // Build sorting expression
-            Expression<Func<Campaign, object>> sortExpression = sortBy.ToLower() switch
+            return (sortField, isDescending) switch
             {
-                "name" => c => c.Name,
-                "budget" => c => c.Budget,
-                "startdate" => c => c.StartDate,
-                "enddate" => c => c.EndDate,
-                "status" => c => c.Status,
-                "createdat" => c => c.CreatedAt,
-                _ => c => c.CreatedAt // Default sort
+                ("name", true) => query.OrderByDescending(c => c.Name),
+                ("name", false) => query.OrderBy(c => c.Name),
+                ("budget", true) => query.OrderByDescending(c => c.Budget),
+                ("budget", false) => query.OrderBy(c => c.Budget),
+                ("startdate", true) => query.OrderByDescending(c => c.StartDate),
+                ("startdate", false) => query.OrderBy(c => c.StartDate),
+                ("enddate", true) => query.OrderByDescending(c => c.EndDate),
+                ("enddate", false) => query.OrderBy(c => c.EndDate),
+                ("status", true) => query.OrderByDescending(c => c.Status),
+                ("status", false) => query.OrderBy(c => c.Status),
+                ("createdat", true) => query.OrderByDescending(c => c.CreatedAt),
+                ("createdat", false) => query.OrderBy(c => c.CreatedAt),
+                _ => query.OrderByDescending(c => c.CreatedAt) // Default sort
             };
-
-            return isDescending
-                ? query.OrderByDescending(sortExpression)
-                : query.OrderBy(sortExpression);
         }
     }
 }

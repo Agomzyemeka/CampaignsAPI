@@ -593,8 +593,8 @@
          * ============================================
          */
 
-        // Configuration
-        const API_URL = 'https://localhost:7001/api'; // Update to your API URL
+        // Configuration - Auto-detect API URL based on current location
+        const API_URL = window.location.origin + '/api';
 
         // State
         let state = {
@@ -707,6 +707,10 @@
         }
 
         async function loadCampaigns(page = 1) {
+            // Show loading state
+            document.getElementById('campaignsTable').innerHTML = 
+                '<tr><td colspan="6" style="text-align:center;"><div class="spinner"></div> Loading campaigns...</td></tr>';
+            
             try {
                 const response = await fetch(
                     `${API_URL}/campaigns?pageNumber=${page}&pageSize=${state.pagination.pageSize}`,
@@ -718,7 +722,13 @@
                     return;
                 }
 
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
                 const result = await response.json();
+                console.log('Campaigns API response:', result); // Debug log
+                
                 if (result.success) {
                     state.campaigns = result.data.data;
                     state.pagination = {
@@ -729,11 +739,13 @@
                     };
                     renderCampaigns();
                     renderPagination();
+                } else {
+                    throw new Error(result.message || 'Failed to load campaigns');
                 }
             } catch (error) {
                 console.error('Error loading campaigns:', error);
                 document.getElementById('campaignsTable').innerHTML = 
-                    '<tr><td colspan="6" style="text-align:center;color:red;">Error loading campaigns</td></tr>';
+                    `<tr><td colspan="6" style="text-align:center;color:red;">Error: ${error.message}</td></tr>`;
             }
         }
 

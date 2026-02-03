@@ -145,7 +145,15 @@ builder.Services.AddControllers()
         // JSON serialization settings
         options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
         options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
+        // Add enum string converter for proper serialization
+        options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
     });
+
+// Configure API behavior to allow debugging of model binding issues
+builder.Services.Configure<Microsoft.AspNetCore.Mvc.ApiBehaviorOptions>(options =>
+{
+    options.SuppressModelStateInvalidFilter = true;
+});
 
 // ============================================
 // SWAGGER/OPENAPI CONFIGURATION
@@ -259,19 +267,20 @@ app.UseHttpsRedirection();
 app.UseCors("AllowAll");
 
 // Static files from ClientApp folder
-app.UseStaticFiles(new StaticFileOptions
-{
-    FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(
-        Path.Combine(builder.Environment.ContentRootPath, "ClientApp")),
-    RequestPath = ""
-});
+// UseDefaultFiles MUST come before UseStaticFiles
+var clientAppPath = Path.Combine(builder.Environment.ContentRootPath, "ClientApp");
+var fileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(clientAppPath);
 
-// Serve index.html as default
 app.UseDefaultFiles(new DefaultFilesOptions
 {
-    FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(
-        Path.Combine(builder.Environment.ContentRootPath, "ClientApp")),
+    FileProvider = fileProvider,
     DefaultFileNames = new List<string> { "index.html" }
+});
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = fileProvider,
+    RequestPath = ""
 });
 
 // Routing

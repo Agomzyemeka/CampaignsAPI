@@ -1,88 +1,222 @@
-# ============================================
-# .gitignore for ASP.NET Core Projects
-# ============================================
+# ===========================================
+# .gitignore for ASP.NET Core / .NET Projects
+# Professional configuration for CampaignsAPI
+# ===========================================
 
-# Build outputs
-bin/
-obj/
-out/
-publish/
+# ===========================================
+# BUILD OUTPUTS
+# ===========================================
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+[Oo]ut/
+[Pp]ublish/
+x64/
+x86/
+bld/
+[Bb]uild/
+artifacts/
 
-# IDE and Editor
+# ===========================================
+# VISUAL STUDIO / VS CODE
+# ===========================================
 .vs/
-.vscode/
-*.user
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
 *.suo
+*.user
 *.userosscache
 *.sln.docstates
-.idea/
+*.rsuser
 
-# NuGet
-packages/
-*.nupkg
+# Visual Studio profiler
+*.psess
+*.vsp
+*.vspx
+*.sap
+
+# ===========================================
+# .NET SPECIFIC
+# ===========================================
 project.lock.json
+project.fragment.lock.json
+**/Properties/launchSettings.json
 
-# Database files (generated at runtime)
+# StyleCop
+StyleCopReport.xml
+
+# Files built by Visual Studio
+*_i.c
+*_p.c
+*_h.h
+*.ilk
+*.meta
+*.obj
+*.iobj
+*.pch
+*.pdb
+*.ipdb
+*.pgc
+*.pgd
+*.rsp
+*.sbr
+*.tlb
+*.tli
+*.tlh
+*.tmp
+*.tmp_proj
+*_wpftmp.csproj
+*.vspscc
+*.vssscc
+.builds
+*.pidb
+*.svclog
+*.scc
+
+# ===========================================
+# NUGET PACKAGES
+# ===========================================
+[Pp]ackages/
+*.nupkg
+*.snupkg
+*.nuget.props
+*.nuget.targets
+
+# ===========================================
+# DATABASES (SENSITIVE - CONTAINS USER DATA!)
+# ===========================================
 *.db
+*.db-shm
+*.db-wal
 *.db-journal
 *.sqlite
+*.sqlite3
 *.mdf
 *.ldf
+*.ndf
 
-# User-specific and local settings
+# ===========================================
+# ENVIRONMENT & SECRETS (CRITICAL!)
+# ===========================================
+.env
+.env.*
+*.env
 appsettings.Development.json
 appsettings.Local.json
+appsettings.Production.json
 secrets.json
 *.local.json
 
-# Logs
-*.log
-logs/
-Logs/
+# Certificates and Keys
+*.pfx
+*.key
+*.pem
+*.crt
+*.cer
+*.p12
 
-# OS files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-
-# Temp files
-*.tmp
-*.temp
-tmp/
-temp/
-
-# Test results
-TestResults/
-*.trx
-coverage/
-*.coverage
-*.coveragexml
-
-# Misc
-*.cache
-*.bak
-*.swp
-*~
-
-# Rider
-.idea/
-
-# ASP.NET Scaffolding
-ScaffoldingReadMe.txt
+# User secrets
+secrets/
 
 # Azure Functions
 local.settings.json
 
-# Secrets
-*.pfx
-*.pem
-*.key
+# AWS
+.aws/
+aws-credentials
 
-# Node (if using SPA)
+# ===========================================
+# DOCKER
+# ===========================================
+docker-compose.override.yml
+.docker/
+
+# ===========================================
+# TEST RESULTS
+# ===========================================
+[Tt]est[Rr]esults/
+[Bb]uild[Ll]og.*
+*.VisualState.xml
+TestResult.xml
+nunit-*.xml
+*.trx
+coverage/
+coverage*.json
+coverage*.xml
+coverage*.info
+*.coverage
+*.coveragexml
+
+# ===========================================
+# JETBRAINS RIDER
+# ===========================================
+.idea/
+*.sln.iml
+
+# ===========================================
+# RESHARPER
+# ===========================================
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# ===========================================
+# OS GENERATED FILES
+# ===========================================
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.DS_Store?
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Linux
+*~
+.fuse_hidden*
+.Trash-*
+.nfs*
+
+# ===========================================
+# MISC
+# ===========================================
+*.swp
+*.swo
+*.bak
+*.backup
+*.cache
+*.orig
+*.tmp
+*.temp
+.temp/
+temp/
+tmp/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# Node modules (if using frontend build tools)
 node_modules/
-npm-debug.log
-yarn-error.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ===========================================
+# CUSTOM PROJECT FILES
+# ===========================================
+# Add any project-specific files to ignore below
+
